@@ -229,3 +229,8 @@ sudo systemctl status e-nav-go.service
 ---
 
 通过这个更新后的教程，你不仅可以安装并运行最新版本的 Go，还能轻松启动和停止你的 Go 程序，甚至将其设置为后台服务。
+
+sudo lsof -i :8080
+sudo kill -9 2032348
+
+sudo rm -f /etc/systemd/system/e-nav-go.service && sudo systemctl daemon-reload && rm -rf ~/e-nav-go && go clean -modcache && sudo rm -rf /usr/local/go && sudo apt remove --purge git && sudo apt autoremove && sed -i '/\/usr\/local\/go\/bin/d' ~/.bashrc && source ~/.bashrc && sudo apt autoremove && sudo apt clean
