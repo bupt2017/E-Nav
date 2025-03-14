@@ -1,0 +1,122 @@
+#!/bin/bash
+
+# 颜色定义
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+NC="\033[0m"
+
+# 检查是否为root用户
+if [ "$EUID" -ne 0 ]; then 
+    echo -e "${RED}请使用root用户运行此脚本${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}开始安装 E-Nav...${NC}"
+
+# 检查并安装必要的软件
+install_requirements() {
+    echo -e "${YELLOW}检查并安装必要的软件...${NC}"
+    if ! command -v git &> /dev/null; then
+        apt-get update
+        apt-get install -y git
+    fi
+}
+
+# 检查并安装Go
+check_go() {
+    if ! command -v go &> /dev/null; then
+        echo -e "${YELLOW}未检测到Go,开始安装...${NC}"
+        wget https://golang.google.cn/dl/go1.24.1.linux-amd64.tar.gz
+        tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz
+        echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+        source /root/.bashrc
+        rm go1.24.1.linux-amd64.tar.gz
+    fi
+}
+
+# 克隆项目
+clone_project() {
+    echo -e "${GREEN}克隆项目...${NC}"
+    cd /root
+    git clone https://github.com/ecouus/E-Nav.git
+    cd E-Nav
+}
+
+# 初始化Go项目
+init_project() {
+    echo -e "${GREEN}初始化Go项目...${NC}"
+    go mod init E-Nav
+    go mod tidy
+}
+
+# 编译项目
+build_project() {
+    echo -e "${GREEN}编译项目...${NC}"
+    go build -o E-Nav
+}
+
+# 创建系统服务
+create_service() {
+    echo -e "${GREEN}创建系统服务...${NC}"
+    cat > /etc/systemd/system/E-Nav.service << EOF
+[Unit]
+Description=E-Nav Go Web Application
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/E-Nav
+ExecStart=/root/E-Nav/E-Nav
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    systemctl daemon-reload
+    systemctl enable E-Nav
+    systemctl start E-Nav
+}
+
+# 主安装流程
+main() {
+    install_requirements
+    check_go
+    clone_project
+    init_project
+    build_project
+    create_service
+    
+    # 检查服务状态
+    if systemctl is-active --quiet E-Nav; then
+        echo -e "${GREEN}E-Nav 安装成功!${NC}"
+        echo -e "${GREEN}您可以通过访问 http://服务器IP:1239 来使用导航站${NC}"
+    else
+        echo -e "${RED}E-Nav 安装失败,请检查日志${NC}"
+        exit 1
+    fi
+}
+
+# 卸载函数
+uninstall() {
+    echo -e "${YELLOW}开始卸载 E-Nav...${NC}"
+    systemctl stop E-Nav
+    systemctl disable E-Nav
+    rm -f /etc/systemd/system/E-Nav.service
+    systemctl daemon-reload
+    rm -rf /root/E-Nav
+    echo -e "${GREEN}E-Nav 已成功卸载${NC}"
+}
+
+# 参数处理
+case "$1" in
+    "uninstall")
+        uninstall
+        ;;
+    *)
+        main
+        ;;
+esac
