@@ -897,27 +897,24 @@
                     const hasUserIcon = !!link.icon;
                     
                     // 获取图标内容
-                    let iconContent = hasUserIcon ? link.icon : link.name.charAt(0);
-                    
-                    // 检查是否为favicon URL
-                    const isFaviconUrl = typeof iconContent === 'string' && 
-                                        (iconContent.includes('google.com/s2/favicons') || 
-                                        iconContent.match(/\.(png|jpg|jpeg|gif|svg|webp)(\?.*)?$/i));
-                                        
-                    // 处理可能的转义字符
-                    if (isFaviconUrl) {
-                        iconContent = iconContent.replace(/\\u0026/g, '&');
+                    let iconContent = '';
+                    if (link.icon) {
+                        // 检查是否是URL
+                        if (link.icon.startsWith('http')) {
+                            iconContent = `<img src="${link.icon}" alt="icon" class="favicon-img">`;
+                        } else {
+                            iconContent = link.icon; // Emoji或文字图标
+                        }
+                    } else {
+                        iconContent = link.name.charAt(0); // 首字母作为默认图标
                     }
                     
                     // 为每个链接分配一个确定的颜色 (基于URL的哈希值，确保相同URL总是同一个颜色)
                     const colorClass = getColorForUrl(link.url, index);
                     
-                    // 确定该项目是否为favicon URL
-                    const dataAttr = isFaviconUrl ? 'data-favicon-url="true"' : '';
-                    
                     html += `
                         <a href="${link.url}" class="bookmark-item" target="_blank">
-                            <div class="bookmark-icon ${colorClass}" data-has-user-icon="${hasUserIcon}" ${dataAttr}>
+                            <div class="bookmark-icon ${colorClass}" data-has-user-icon="${hasUserIcon}">
                                 ${iconContent}
                             </div>
                             <div class="bookmark-info">
@@ -1094,37 +1091,6 @@
                         .catch(error => {
                             console.error('Error fetching favicon:', error);
                         });
-                }
-                // 如果已经在图标数据中包含了favicon URL
-                else if (hasUserIcon && iconElement.textContent && 
-                        (iconElement.textContent.includes('google.com/s2/favicons') || 
-                        iconElement.textContent.match(/\.(png|jpg|jpeg|gif|svg|webp)(\?.*)?$/i))) {
-            
-                    let imgUrl = iconElement.textContent;
-    
-                    // 处理可能的转义字符
-                    imgUrl = imgUrl.replace(/\\u0026/g, '&');
-    
-                    // 创建图片元素
-                    const img = document.createElement('img');
-                    img.className = 'favicon-img';
-                    img.src = imgUrl; // 正确：使用 imgUrl 变量
-                    img.alt = '';
-    
-                    // 加载成功时清除原有内容并插入图片
-                    img.onload = function() {
-                        if (img.naturalWidth > 0) {
-                            iconElement.textContent = '';
-                            iconElement.appendChild(img);
-                        }
-                    };
-    
-                    // 为图片添加错误处理
-                    img.onerror = function() {
-                        console.error('Failed to load image:', imgUrl); // 使用 imgUrl
-                        // 恢复到默认显示（网站名称首字母）
-                        iconElement.textContent = item.querySelector('.bookmark-name').textContent.charAt(0);
-                    };
                 }
             });
         }
