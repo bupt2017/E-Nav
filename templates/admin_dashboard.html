@@ -806,7 +806,7 @@
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item';
                 
-                const icon = category.Icon || '📁';
+                const icon = category.icon || '📁';
                 categoryItem.innerHTML = `
                     <div class="category-name">
                         <span class="category-icon">${icon}</span>
@@ -835,7 +835,7 @@
                 category.links.forEach((link, index) => {
                     const row = document.createElement('tr');
                     
-                    const iconContent = link.Icon || link.name.charAt(0);
+                    const iconContent = link.icon || link.name.charAt(0);
                     row.innerHTML = `
                         <td>
                             <div class="bookmark-name">
@@ -884,7 +884,7 @@
                     },
                     body: JSON.stringify({
                         category: categoryName,
-                        Icon: categoryIcon,
+                        icon: categoryIcon,
                         links: []
                     })
                 });
@@ -914,7 +914,7 @@
 
             document.getElementById('editCategoryOldName').value = categoryName;
             document.getElementById('editCategoryName').value = categoryName;
-            document.getElementById('editCategoryIcon').value = category.Icon || '';
+            document.getElementById('editCategoryIcon').value = category.icon || '';
             
             showModal('editCategoryModal');
         }
@@ -945,7 +945,7 @@
                     },
                     body: JSON.stringify({
                         newCategory: newCategoryName,
-                        Icon: categoryIcon
+                        icon: categoryIcon
                     })
                 });
                 
@@ -1012,9 +1012,9 @@
                         category: category,
                         bookmark: {
                             name: name,
-                            URL: url,
+                            url: url,
                             desc: desc,
-                            Icon: icon
+                            icon: icon
                         }
                     })
                 });
@@ -1049,7 +1049,7 @@
             document.getElementById('editBookmarkName').value = bookmark.name;
             document.getElementById('editBookmarkUrl').value = bookmark.url;
             document.getElementById('editBookmarkDesc').value = bookmark.desc || '';
-            document.getElementById('editBookmarkIcon').value = bookmark.Icon || '';
+            document.getElementById('editBookmarkIcon').value = bookmark.icon || '';
             
             showModal('editBookmarkModal');
         }
@@ -1076,9 +1076,9 @@
                     },
                     body: JSON.stringify({
                         name: name,
-                        URL: url,
+                        url: url,
                         desc: desc,
-                        Icon: icon
+                        icon: icon
                     })
                 });
                 
