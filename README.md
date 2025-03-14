@@ -88,7 +88,7 @@ docker run -d \
 ```
 后续更新：
 ```
-docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 -v /root/e-nav/data:/app/data --restart unless-stopped ecouus/e-nav:latest
+docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 --restart unless-stopped ecouus/e-nav:latest
 ```
 <details>
 <summary>💡 端口修改说明</summary>
@@ -98,12 +98,12 @@ docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docke
 </details>
 
 ### 方式二：一键脚本部署
-
+- 安装
 ```bash
-# 安装
 curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/One-Click.sh -o One-Click.sh && chmod +x One-Click.sh && bash One-Click.sh install
-
-# 卸载
+```
+- 卸载
+```
 bash One-Click.sh uninstall
 ```
 ### 方法三：手动部署
