@@ -18,7 +18,18 @@ E-Nav 是一个简洁、美观的导航网站系统。支持一键部署，方�
 ![5998c96ea36eb0d5bd663938c0110bfa.png](https://i.miji.bid/2025/03/14/5998c96ea36eb0d5bd663938c0110bfa.png)
 ## 快速开始
 
-### 方法一：一键脚本（推荐）
+
+### 方法一：Docker部署（推荐）
+```
+docker run -d \
+  --name e-nav \
+  -p 1239:1239 \
+  --restart unless-stopped \
+  ecouus/e-nav:latest
+```
+-  -p 1239:1239 \中第一个1239可更改为其他任意的端口
+
+### 方法二：本机一键脚本部署（推荐）
 
 1. 安装
 ```bash
@@ -29,8 +40,7 @@ curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/One-Click.sh -o O
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/One-Click.sh -o One-Click.sh && chmod +x One-Click.sh && bash One-Click.sh uninstall
 ```
-
-### 方法二：手动部署
+### 方法二：本机手动部署
 1. 安装必要软件
 ```bash
 apt update
