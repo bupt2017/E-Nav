@@ -25,13 +25,13 @@
         "name": "新浪新闻",
         "url": "https://news.sina.com.cn/",
         "desc": "新浪网新闻中心",
-        "icon": "https://www.google.com/s2/favicons?domain=sina.com.cn"
+        "icon": "新"
       },
       {
         "name": "网易",
         "url": "https://www.163.com/",
         "desc": "领先的互联网技术公司",
-        "icon": "https://www.google.com/s2/favicons?domain=163.com"
+        "icon": "网"
       }
     ]
   }
