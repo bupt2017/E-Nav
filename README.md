@@ -39,30 +39,27 @@
       </ul>
     </td>
   </tr>
-</table>
-
-## 📚 核心功能
-
-<table>
   <tr>
-    <td width="33%">
-      <h4>🎨 智能图标</h4>
+    <td width="50%">
+      <h3 align="center">🎨 智能图标</h3>
       <ul>
         <li>自动获取favicon</li>
         <li>支持自定义上传</li>
         <li>优雅降级处理</li>
       </ul>
     </td>
-    <td width="33%">
-      <h4>🔍 搜索功能</h4>
+    <td width="50%">
+      <h3 align="center">🔍 搜索功能</h3>
       <ul>
         <li>实时搜索过滤</li>
         <li>全文本搜索</li>
         <li>集成搜索引擎</li>
       </ul>
     </td>
-    <td width="33%">
-      <h4>🛡️ 安全特性</h4>
+  </tr>
+  <tr>
+    <td width="50%" colspan="2">
+      <h3 align="center">🛡️ 安全特性</h3>
       <ul>
         <li>密码加密存储</li>
         <li>会话安全管理</li>
@@ -71,6 +68,8 @@
     </td>
   </tr>
 </table>
+
+
 ## 🚀 快速部署
 
 ### 方式一：Docker部署（推荐）
