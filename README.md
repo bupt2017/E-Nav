@@ -69,6 +69,11 @@
   </tr>
 </table>
 
+## 💻 后台管理
+
+- 访问地址：`http://您的域名:1239/admin`
+- 默认密码：`admin`
+- 请及时修改默认密码以确保安全
 
 ## 🚀 快速部署
 
@@ -98,12 +103,86 @@ curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/One-Click.sh -o O
 # 卸载
 bash One-Click.sh uninstall
 ```
+### 方法三：手动部署
+1. 安装必要软件
+```bash
+apt update
+apt install -y git
+```
 
-## 💻 后台管理
+2. 安装 Go
+```bash
+wget https://go.dev/dl/go1.24.1.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz
+echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+source /root/.bashrc
+```
 
-- 访问地址：`http://您的域名:1239/admin`
-- 默认密码：`admin`
-- 请及时修改默认密码以确保安全
+3. 克隆项目
+```bash
+cd /root
+git clone https://github.com/ecouus/E-Nav.git
+cd E-Nav
+```
+
+4. 初始化和编译
+```bash
+go mod init E-Nav
+go mod tidy
+go build -o E-Nav
+```
+
+5. 创建系统服务
+```bash
+cat > /etc/systemd/system/E-Nav.service << EOF
+[Unit]
+Description=E-Nav Go Web Application
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/E-Nav
+ExecStart=/root/E-Nav/E-Nav
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+6. 启动服务
+```bash
+systemctl daemon-reload
+systemctl enable E-Nav
+systemctl start E-Nav
+```
+
+## 常用命令
+```bash
+# 查看服务状态
+systemctl status E-Nav
+
+# 启动服务
+systemctl start E-Nav
+
+# 停止服务
+systemctl stop E-Nav
+
+# 重启服务
+systemctl restart E-Nav
+
+# 查看日志
+journalctl -u E-Nav
+```
+
+## 注意事项
+- 请确保使用root用户执行脚本
+- 本机部署需确保服务器1239端口未被占用
+- 建议安装完成后及时修改后台密码
+- 如遇问题，请查看服务日志排查
+
 
 ## 🛠️ 技术架构
 
