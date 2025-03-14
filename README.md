@@ -8,9 +8,9 @@
 ![Go](https://img.shields.io/badge/Go-1.24.1-00ADD8?logo=go)
 ![Stars](https://img.shields.io/github/stars/ecouus/E-Nav?style=social)
 
-<p>一个优雅、现代的个人导航站解决方案，让您的网址管理更轻松、更智能！</p>
+<p>一个优雅、现代的个人导航站解决方案，让您的网址管理更轻松、更智能！制作不易，欢迎点个免费的Star⭐</p>
 
-[演示站点](https://demo.enav.com) | [使用文档](https://docs.enav.com) | [问题反馈](https://github.com/ecouus/E-Nav/edit/main/README.md#-%E8%81%94%E7%B3%BB%E6%88%91%E4%BB%AC)
+[演示站点](https://enavdemo.ecouu.com) | [使用文档](https://github.com/ecouus/E-Nav/blob/main/README.md) | [问题反馈](https://github.com/ecouus/E-Nav/issues)
 
 ![预览图](https://i.miji.bid/2025/03/14/5998c96ea36eb0d5bd663938c0110bfa.png)
 
