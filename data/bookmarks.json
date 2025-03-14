@@ -7,34 +7,37 @@
         "name": "百度",
         "url": "https://www.baidu.com",
         "desc": "全球最大的中文搜索引擎",
-        "icon": "B"
+        "icon": "https://www.google.com/s2/favicons?domain=baidu.com"
       },
       {
         "name": "腾讯网",
         "url": "https://www.qq.com",
         "desc": "新闻资讯门户网站",
-        "icon": "Q"
+        "icon": "https://www.google.com/s2/favicons?domain=qq.com"
       },
       {
         "name": "知乎",
         "url": "https://www.zhihu.com",
         "desc": "中文互联网高质量问答社区",
-        "icon": "知"
+        "icon": "https://www.google.com/s2/favicons?domain=zhihu.com"
       },
       {
         "name": "哔哩哔哩",
         "url": "https://www.bilibili.com",
-        "desc": "国内知名的视频弹幕网站"
+        "desc": "国内知名的视频弹幕网站",
+        "icon": "https://www.google.com/s2/favicons?domain=bilibili.com"
       },
       {
         "name": "淘宝网",
         "url": "https://www.taobao.com",
-        "desc": "中国领先的购物平台"
+        "desc": "中国领先的购物平台",
+        "icon": "https://www.google.com/s2/favicons?domain=taobao.com"
       },
       {
         "name": "微博",
         "url": "https://weibo.com",
-        "desc": "中国领先的社交媒体平台"
+        "desc": "中国领先的社交媒体平台",
+        "icon": "https://www.google.com/s2/favicons?domain=weibo.com"
       }
     ]
   },
@@ -45,22 +48,26 @@
       {
         "name": "新浪新闻",
         "url": "https://news.sina.com.cn/",
-        "desc": "新浪网新闻中心"
+        "desc": "新浪网新闻中心",
+        "icon": "https://www.google.com/s2/favicons?domain=sina.com.cn"
       },
       {
         "name": "网易",
         "url": "https://www.163.com/",
-        "desc": "领先的互联网技术公司"
+        "desc": "领先的互联网技术公司",
+        "icon": "https://www.google.com/s2/favicons?domain=163.com"
       },
       {
         "name": "人民网",
         "url": "http://www.people.com.cn/",
-        "desc": "人民日报社主办的网站"
+        "desc": "人民日报社主办的网站",
+        "icon": "https://www.google.com/s2/favicons?domain=people.com.cn"
       },
       {
         "name": "澎湃新闻",
         "url": "https://www.thepaper.cn/",
-        "desc": "专注时政与思想的媒体"
+        "desc": "专注时政与思想的媒体",
+        "icon": "https://www.google.com/s2/favicons?domain=thepaper.cn"
       }
     ]
   },
