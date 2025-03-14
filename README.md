@@ -17,27 +17,17 @@ E-Nav 是一个简洁、美观的导航网站系统。支持一键部署，方�
 
 ### 方法一：一键脚本（推荐）
 
-1. 下载脚本
+1. 安装
 ```bash
-wget https://raw.githubusercontent.com/你的用户名/E-Nav-Deploy/main/One-Click.sh
+curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/One-Click.sh -o One-Click.sh && chmod +x One-Click.sh && bash One-Click.sh install
 ```
 
-2. 添加执行权限
+2. 卸载
 ```bash
-chmod +x One-Click.sh
-```
-
-3. 运行脚本
-```bash
-# 安装
-./One-Click.sh install
-
-# 卸载
-./One-Click.sh uninstall
+curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/One-Click.sh -o One-Click.sh && chmod +x One-Click.sh && bash One-Click.sh uninstall
 ```
 
 ### 方法二：手动部署
-
 1. 安装必要软件
 ```bash
 apt update
@@ -113,7 +103,7 @@ journalctl -u E-Nav
 
 ## 注意事项
 - 请确保使用root用户执行脚本
-- 确保服务器1239端口未被占用
+- 本机部署需确保服务器1239端口未被占用
 - 建议安装完成后及时修改后台密码
 - 如遇问题，请查看服务日志排查
 
