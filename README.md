@@ -82,12 +82,13 @@
 docker run -d \
   --name e-nav \
   -p 1239:1239 \
+  -v /root/e-nav/data:/app/data \
   --restart unless-stopped \
   ecouus/e-nav:latest
 ```
 后续更新：
 ```
-docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 --restart unless-stopped ecouus/e-nav:latest
+docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 -v /root/e-nav/data:/app/data --restart unless-stopped ecouus/e-nav:latest
 ```
 <details>
 <summary>💡 端口修改说明</summary>
