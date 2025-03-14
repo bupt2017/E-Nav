@@ -11,9 +11,6 @@
 <p>一个优雅、现代的个人导航站解决方案，让您的网址管理更轻松、更智能！制作不易，欢迎点个免费的Star⭐</p>
 
 [演示站点](https://enavdemo.ecouu.com) | [使用文档](https://github.com/ecouus/E-Nav/blob/main/README.md) | [问题反馈](https://github.com/ecouus/E-Nav/issues)
-
-![预览图](https://i.miji.bid/2025/03/14/5998c96ea36eb0d5bd663938c0110bfa.png)
-![e969e7a047dfa4bdcc829d4d079403eb.png](https://i.miji.bid/2025/03/14/e969e7a047dfa4bdcc829d4d079403eb.png)
 </div>
 
 ##  产品特性
@@ -74,6 +71,9 @@
 - 访问地址：`http://您的域名:1239/admin`
 - 默认密码：`admin`
 - 请及时修改默认密码以确保安全
+
+![预览图](https://i.miji.bid/2025/03/14/5998c96ea36eb0d5bd663938c0110bfa.png)
+![e969e7a047dfa4bdcc829d4d079403eb.png](https://i.miji.bid/2025/03/14/e969e7a047dfa4bdcc829d4d079403eb.png)
 
 ## 🚀 快速部署
 
