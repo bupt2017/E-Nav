@@ -13,7 +13,7 @@
 [演示站点](https://enavdemo.ecouu.com) | [使用文档](https://github.com/ecouus/E-Nav/blob/main/README.md) | [问题反馈](https://github.com/ecouus/E-Nav/issues)
 
 ![预览图](https://i.miji.bid/2025/03/14/5998c96ea36eb0d5bd663938c0110bfa.png)
-
+![e969e7a047dfa4bdcc829d4d079403eb.png](https://i.miji.bid/2025/03/14/e969e7a047dfa4bdcc829d4d079403eb.png)
 </div>
 
 ##  产品特性
