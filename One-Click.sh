@@ -35,7 +35,7 @@ install() {
     # 检查并安装Go
     if ! command -v go &> /dev/null; then
         echo -e "${YELLOW}未检测到Go,开始安装...${NC}"
-        wget https://golang.google.cn/dl/go1.24.1.linux-amd64.tar.gz
+        wget https://go.dev/dl/go1.24.1.linux-amd64.tar.gz
         tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz
         echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
         source /root/.bashrc
