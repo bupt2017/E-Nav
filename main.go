@@ -11,7 +11,7 @@ import (
     "os"
     "strconv"
     "strings"
-
+	"path/filepath"
 
     "github.com/gorilla/mux"
     "github.com/gorilla/sessions"
@@ -47,11 +47,28 @@ var (
 	config     Config
 	bookmarks  []BookmarkCategory
 	store      *sessions.CookieStore
-	configFile = "config.json"
+	dataDir    = "data"                                   
+    configFile = filepath.Join(dataDir, "config.json")   
+
 )
+
+// 初始化函数
+func init() {
+    // 确保data目录存在
+    if _, err := os.Stat(dataDir); os.IsNotExist(err) {
+        if err := os.MkdirAll(dataDir, 0755); err != nil {
+            log.Fatalf("无法创建数据目录: %v", err)
+        }
+        log.Printf("创建数据目录: %s", dataDir)
+    }
+}
+
 
 func main() {
 	// 加载配置
+	log.Printf("使用数据目录: %s", dataDir)
+    log.Printf("配置文件路径: %s", configFile)
+
 	if err := loadConfig(); err != nil {
 		log.Fatalf("加载配置失败: %v", err)
 	}
@@ -111,41 +128,55 @@ func main() {
 
 // 加载配置
 func loadConfig() error {
-	// 检查配置文件是否存在
-	if _, err := os.Stat(configFile); os.IsNotExist(err) {
-		// 创建默认配置
-		defaultPassword, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
-		config = Config{
-			Port:     "1239",
-			AdminPwd: string(defaultPassword),
-			DataFile: "bookmarks.json",
-		}
-		
-		// 保存默认配置
-		return saveConfig()
-	}
-	
-	// 读取配置文件
-	data, err := ioutil.ReadFile(configFile)
-	if err != nil {
-		return err
-	}
-	
-	return json.Unmarshal(data, &config)
+    // 检查配置文件是否存在
+    if _, err := os.Stat(configFile); os.IsNotExist(err) {
+        // 创建默认配置
+        defaultPassword, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+        config = Config{
+            Port:     "1239",
+            AdminPwd: string(defaultPassword),
+            DataFile: filepath.Join(dataDir, "bookmarks.json"), 
+        }
+        
+        // 保存默认配置
+        return saveConfig()
+    }
+    
+    // 读取配置文件
+    data, err := ioutil.ReadFile(configFile)
+    if err != nil {
+        return err
+    }
+    
+    // 解析配置
+    if err := json.Unmarshal(data, &config); err != nil {
+        return err
+    }
+    
+    // 确保数据文件路径正确（兼容旧配置）
+    if !strings.HasPrefix(config.DataFile, dataDir) {
+        config.DataFile = filepath.Join(dataDir, filepath.Base(config.DataFile))
+        saveConfig()  // 保存修改后的配置
+    }
+    
+    return nil
 }
+
 
 // 保存配置
 func saveConfig() error {
-	data, err := json.MarshalIndent(config, "", "  ")
-	if err != nil {
-		return err
-	}
-	
-	return ioutil.WriteFile(configFile, data, 0644)
+    data, err := json.MarshalIndent(config, "", "  ")
+    if err != nil {
+        return err
+    }
+    
+    return ioutil.WriteFile(configFile, data, 0644)
 }
+
 
 // 加载书签
 func loadBookmarks() error {
+	log.Printf("尝试从 %s 加载书签数据", config.DataFile)
 	// 检查数据文件是否存在
 	if _, err := os.Stat(config.DataFile); os.IsNotExist(err) {
 		// 创建默认书签数据
@@ -201,13 +232,21 @@ func loadBookmarks() error {
 
 // 保存书签
 func saveBookmarks() error {
-	data, err := json.MarshalIndent(bookmarks, "", "  ")
-	if err != nil {
-		return err
-	}
-	
-	return ioutil.WriteFile(config.DataFile, data, 0644)
+    // 确保数据文件目录存在
+    if _, err := os.Stat(filepath.Dir(config.DataFile)); os.IsNotExist(err) {
+        if err := os.MkdirAll(filepath.Dir(config.DataFile), 0755); err != nil {
+            return err
+        }
+    }
+    
+    data, err := json.MarshalIndent(bookmarks, "", "  ")
+    if err != nil {
+        return err
+    }
+    
+    return ioutil.WriteFile(config.DataFile, data, 0644)
 }
+
 
 // 首页处理
 func homeHandler(w http.ResponseWriter, r *http.Request) {
