@@ -901,8 +901,9 @@
                     
                     // 检查是否为favicon URL
                     const isFaviconUrl = typeof iconContent === 'string' && 
-                                        iconContent.includes('google.com/s2/favicons');
-                    
+                                        (iconContent.includes('google.com/s2/favicons') || 
+                                        iconContent.match(/\.(png|jpg|jpeg|gif|svg|webp)(\?.*)?$/i));
+                                        
                     // 处理可能的转义字符
                     if (isFaviconUrl) {
                         iconContent = iconContent.replace(/\\u0026/g, '&');
@@ -1095,18 +1096,21 @@
                         });
                 }
                 // 如果已经在图标数据中包含了favicon URL
-                else if (iconElement.textContent && iconElement.textContent.includes('google.com/s2/favicons')) {
-                    let faviconUrl = iconElement.textContent;
-                    
+                else if (hasUserIcon && iconElement.textContent && 
+                        (iconElement.textContent.includes('google.com/s2/favicons') || 
+                        iconElement.textContent.match(/\.(png|jpg|jpeg|gif|svg|webp)(\?.*)?$/i))) {
+            
+                    let imgUrl = iconElement.textContent;
+    
                     // 处理可能的转义字符
-                    faviconUrl = faviconUrl.replace(/\\u0026/g, '&');
-                    
+                    imgUrl = imgUrl.replace(/\\u0026/g, '&');
+    
                     // 创建图片元素
                     const img = document.createElement('img');
                     img.className = 'favicon-img';
-                    img.src = faviconUrl;
+                    img.src = imgUrl; // 正确：使用 imgUrl 变量
                     img.alt = '';
-                    
+    
                     // 加载成功时清除原有内容并插入图片
                     img.onload = function() {
                         if (img.naturalWidth > 0) {
@@ -1114,10 +1118,10 @@
                             iconElement.appendChild(img);
                         }
                     };
-                    
+    
                     // 为图片添加错误处理
                     img.onerror = function() {
-                        console.error('Failed to load favicon:', faviconUrl);
+                        console.error('Failed to load image:', imgUrl); // 使用 imgUrl
                         // 恢复到默认显示（网站名称首字母）
                         iconElement.textContent = item.querySelector('.bookmark-name').textContent.charAt(0);
                     };
