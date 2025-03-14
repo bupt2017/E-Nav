@@ -108,4 +108,4 @@ journalctl -u E-Nav
 - 如遇问题，请查看服务日志排查
 
 ## 许可证
-GPL-3.0 license
+[GPL-3.0 license](https://github.com/ecouus/E-Nav/blob/main/LICENSE)
