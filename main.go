@@ -97,7 +97,8 @@ func main() {
 	// 公共页面
 	r.HandleFunc("/", homeHandler).Methods("GET")
 	r.HandleFunc("/api/bookmarks", getBookmarksHandler).Methods("GET")
-	
+    r.HandleFunc("/api/favicon", getFaviconHandler).Methods("GET")
+
 	// 管理员页面
 	r.HandleFunc("/admin", adminLoginHandler).Methods("GET")
 	r.HandleFunc("/admin/login", adminLoginPostHandler).Methods("POST")
@@ -666,4 +667,25 @@ func changePasswordHandler(w http.ResponseWriter, r *http.Request) {
         "status": "success",
         "message": "密码修改成功",
     })
+}
+
+// favicon处理器
+func getFaviconHandler(w http.ResponseWriter, r *http.Request) {
+    // 获取查询参数中的URL
+    urlParam := r.URL.Query().Get("url")
+    if urlParam == "" {
+        http.Error(w, "缺少url参数", http.StatusBadRequest)
+        return
+    }
+    
+    // 使用现有的getFavicon函数获取favicon URL
+    faviconURL, err := getFavicon(urlParam)
+    if err != nil {
+        http.Error(w, "获取favicon失败", http.StatusInternalServerError)
+        return
+    }
+    
+    // 返回favicon URL
+    w.Header().Set("Content-Type", "text/plain")
+    w.Write([]byte(faviconURL))
 }
