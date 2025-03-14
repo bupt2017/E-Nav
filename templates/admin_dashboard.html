@@ -762,15 +762,26 @@
         }
         
         // 显示提示消息
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'toast-error' : 'toast-info'}`;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
             
+            // 显示动画
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // 3秒后隐藏
             setTimeout(() => {
                 toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
             }, 3000);
         }
+
         
         // 获取书签数据
         async function fetchBookmarks() {
@@ -1127,9 +1138,51 @@
                 return;
             }
             
-            // 这里添加修改密码的API调用
-            showToast('密码修改功能暂未实现，请联系管理员！');
+            if(newPassword.length < 6) {
+                showToast('新密码长度不能少于6个字符！');
+                return;
+            }
+            
+            // 获取提交按钮并禁用
+            const submitBtn = document.querySelector('button[onclick="changePassword()"]');
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在处理...';
+            
+            try {
+                const response = await fetch('/admin/api/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        currentPassword: currentPassword,
+                        newPassword: newPassword
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    // 清空输入框
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                    
+                    showToast('密码修改成功！');
+                } else {
+                    showToast(result.message || '密码修改失败，请重试！');
+                }
+            } catch (error) {
+                console.error('修改密码失败:', error);
+                showToast('密码修改失败，请重试！');
+            } finally {
+                // 恢复按钮状态
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+            }
         }
+
     </script>
 </body>
 </html>
