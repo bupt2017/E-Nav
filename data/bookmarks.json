@@ -7,7 +7,7 @@
         "name": "百度",
         "url": "https://www.baidu.com",
         "desc": "全球最大的中文搜索引擎",
-        "icon": "https://www.google.com/s2/favicons?domain=baidu.com"
+        "icon": "1"
       },
       {
         "name": "腾讯网",
@@ -24,12 +24,14 @@
       {
         "name": "新浪新闻",
         "url": "https://news.sina.com.cn/",
-        "desc": "新浪网新闻中心"
+        "desc": "新浪网新闻中心",
+        "icon": "https://www.google.com/s2/favicons?domain=sina.com.cn"
       },
       {
         "name": "网易",
         "url": "https://www.163.com/",
-        "desc": "领先的互联网技术公司"
+        "desc": "领先的互联网技术公司",
+        "icon": "https://www.google.com/s2/favicons?domain=163.com"
       }
     ]
   }
