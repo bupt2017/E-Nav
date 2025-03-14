@@ -20,19 +20,19 @@
     <td width="50%">
       <h3 align="center">🎯 快速部署</h3>
       <ul>
-        <li>⚡️ 一键式安装/卸载</li>
-        <li>🐳 Docker容器化部署</li>
-        <li>🔄 自动更新维护</li>
-        <li>📦 极简配置要求</li>
+        <li> 一键式安装/卸载</li>
+        <li> Docker容器化部署</li>
+        <li> 自动更新维护</li>
+        <li> 极简配置要求</li>
       </ul>
     </td>
     <td width="50%">
       <h3 align="center">👨‍💻 简单管理</h3>
       <ul>
-        <li>💼 简洁后台界面</li>
-        <li>🔒 安全权限控制</li>
-        <li>📱 响应式设计</li>
-        <li>🌓 明暗主题切换</li>
+        <li> 简洁后台界面</li>
+        <li> 安全权限控制</li>
+        <li> 响应式设计</li>
+        <li> 明暗主题切换</li>
       </ul>
     </td>
   </tr>
