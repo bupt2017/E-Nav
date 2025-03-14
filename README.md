@@ -75,27 +75,6 @@
 ![e969e7a047dfa4bdcc829d4d079403eb.png](https://i.miji.bid/2025/03/14/e969e7a047dfa4bdcc829d4d079403eb.png)
 
 ## 🚀 快速部署
-
-### 方式一：Docker部署（推荐）
-
-```bash
-docker run -d \
-  --name e-nav \
-  -p 1239:1239 \
-  -v $(pwd)/data:/app/data \
-  --restart unless-stopped \
-  ecouus/e-nav:latest
-```
-后续更新：
-```
-docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 -v $(pwd)/data:/app/data --restart unless-stopped ecouus/e-nav:latest
-```
-💡 端口修改说明
-- `-p 1239:1239` 中第一个1239可更改为任意未被占用的端口
-- 例如：`-p 8080:1239` 则使用8080端口访问
-💡 挂载路径说明
-`$(pwd)/data`表示挂载到宿主机当前工作目录的data文件夹下
-
 ### 方式一：Docker部署（推荐）
 
 ```bash
@@ -118,8 +97,9 @@ docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docke
 - `$(pwd)/data` 表示挂载到宿主机当前工作目录的data文件夹下
 
 **Docker Compose 部署**
+#### 下载源文件
 ```bash
-git clone https://github.com/ecouus/E-Nav.git && cd E-Nav 
+sudo apt install git -y && git clone https://github.com/ecouus/E-Nav.git && cd E-Nav 
 ```
 根据需要编辑 `docker-compose.yml` 文件
 #### 启动
@@ -130,7 +110,7 @@ docker-compose up -d
 ```bash
 docker-compose pull && docker-compose up -d
 ```
-### 方式二：一键脚本部署
+### 方式二：本机一键脚本部署
 - 安装
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/OneClick.sh -o OneClick.sh && chmod +x OneClick.sh && bash OneClick.sh install
