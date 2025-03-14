@@ -1,236 +1,121 @@
-### 1. 卸载旧版本（如果已安装）
+# E-Nav 一键部署脚本
 
-如果系统中已通过 `apt` 安装了旧版本的 Go，建议先卸载：
+E-Nav 是一个简洁、美观的导航网站系统。支持一键部署，方便快捷。后台管理功能强大，可以轻松管理您的导航站点。
 
+## 特性
+- 🚀 一键部署/卸载
+- 💻 简洁的后台管理界面
+- 🔒 安全的权限控制
+- 🎨 美观的界面设计
+
+## 后台管理
+- 访问地址：`http://您的域名:1239/admin`
+- 默认密码：`admin`
+- 请及时修改默认密码以确保安全
+
+## 快速开始
+
+### 方法一：一键脚本（推荐）
+
+1. 下载脚本
 ```bash
-sudo apt remove --purge golang-go
-sudo rm -rf /usr/local/go
+wget https://raw.githubusercontent.com/你的用户名/E-Nav-Deploy/main/One-Click.sh
 ```
 
-### 2. 下载最新版本的 Go
+2. 添加执行权限
+```bash
+chmod +x One-Click.sh
+```
 
-访问 Go 的官方发布页面：[Go Downloads](https://go.dev/dl/) ，选择适合你的操作系统和架构的版本。
+3. 运行脚本
+```bash
+# 安装
+./One-Click.sh install
 
-例如，如果你的架构是 `amd64`，可以使用以下命令下载最新版本的 Go（以 `go1.20.5` 为例，替换成你需要的最新版本号）：
+# 卸载
+./One-Click.sh uninstall
+```
 
+### 方法二：手动部署
+
+1. 安装必要软件
+```bash
+apt update
+apt install -y git
+```
+
+2. 安装 Go
 ```bash
 wget https://go.dev/dl/go1.24.1.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz
+echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+source /root/.bashrc
 ```
 
-### 3. 安装 Go
-
-解压下载的 Go 压缩包到 `/usr/local` 目录：
-
+3. 克隆项目
 ```bash
-sudo tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz
+cd /root
+git clone https://github.com/ecouus/E-Nav.git
+cd E-Nav
 ```
 
-### 4. 设置 Go 的环境变量
-
-接下来，需要设置 Go 的环境变量。在 `~/.bashrc` 或 `~/.profile` 文件中添加以下内容：
-
+4. 初始化和编译
 ```bash
-export PATH=$PATH:/usr/local/go/bin
+go mod init E-Nav
+go mod tidy
+go build -o E-Nav
 ```
 
-使环境变量配置生效：
-
+5. 创建系统服务
 ```bash
-source ~/.bashrc
-```
-
-或者：
-
-```bash
-source ~/.profile
-```
-
-### 5. 验证 Go 是否安装成功
-
-通过以下命令确认 Go 是否正确安装：
-
-```bash
-go version
-```
-
-如果安装成功，你会看到类似如下的输出：
-
-```bash
-go version go1.24.1 linux/amd64
-```
-
----
-
-### 6. 更新系统（可选）
-
-如果需要更新系统，可以运行以下命令：
-
-```bash
-sudo apt update
-sudo apt upgrade -y
-```
-
----
-
-### 7. 安装 Git（如果尚未安装）
-
-如果系统中尚未安装 Git，可以使用以下命令安装：
-
-```bash
-sudo apt install -y git
-```
-
----
-
-### 8. 创建项目目录
-
-创建并进入项目目录：
-
-```bash
-mkdir -p ~/e-nav-go
-cd ~/e-nav-go
-```
-
-创建项目的子目录：
-
-```bash
-mkdir -p static templates
-```
-
----
-
-### 9. 创建并编辑文件
-
-创建和编辑 Go 主程序文件：
-
-```bash
-nano main.go
-```
-
-编辑模板文件：
-
-```bash
-nano templates/index.html
-nano templates/admin_login.html
-nano templates/admin_dashboard.html
-```
-
-创建静态资源目录和文件：
-
-```bash
-mkdir -p static/css static/js static/img
-nano static/favicon.ico
-```
-
----
-
-### 10. 初始化 Go 模块
-
-在项目根目录下初始化 Go 模块：
-
-```bash
-go mod init e-nav-go
-```
-
-安装依赖：
-
-```bash
-go get github.com/gorilla/mux
-go get github.com/gorilla/sessions
-go get golang.org/x/crypto/bcrypt
-```
-
----
-
-### 11. 编译项目
-
-编译 Go 项目：
-
-```bash
-go build -o e-nav-go
-```
-
----
-
-### 12. 运行程序
-
-运行编译后的程序并将其置于后台运行：
-
-```bash
-./e-nav-go &
-```
-
-服务器将运行在 `http://localhost:8080`。使用 `&` 将程序放到后台执行，这样你可以继续在终端执行其他命令。
-
----
-
-### 13. 停止正在运行的程序
-
-如果你想停止已经在后台运行的 Go 程序，可以使用 `pkill -f main` 来终止进程：
-
-```bash
-pkill -f main
-```
-
-这将根据进程命令行中的 `main` 字符串来找到并杀死相关的 Go 程序进程。
-
----
-
-### 14. 设置为系统服务（可选）
-
-创建并编辑 systemd 服务文件：
-
-```bash
-sudo nano /etc/systemd/system/e-nav-go.service
-```
-
-将以下内容粘贴到文件中（替换 `<您的用户名>` 为实际的用户名）：
-
-```ini
+cat > /etc/systemd/system/E-Nav.service << EOF
 [Unit]
 Description=E-Nav Go Web Application
 After=network.target
 
 [Service]
 Type=simple
-User=<您的用户名>
-WorkingDirectory=/home/<您的用户名>/e-nav-go
-ExecStart=/home/<您的用户名>/e-nav-go/e-nav-go
-Restart=on-failure
+User=root
+WorkingDirectory=/root/E-Nav
+ExecStart=/root/E-Nav/E-Nav
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
+EOF
 ```
 
-重新加载 systemd 配置：
-
+6. 启动服务
 ```bash
-sudo systemctl daemon-reload
+systemctl daemon-reload
+systemctl enable E-Nav
+systemctl start E-Nav
 ```
 
-启用服务（设置为开机自启）：
-
+## 常用命令
 ```bash
-sudo systemctl enable e-nav-go.service
+# 查看服务状态
+systemctl status E-Nav
+
+# 启动服务
+systemctl start E-Nav
+
+# 停止服务
+systemctl stop E-Nav
+
+# 重启服务
+systemctl restart E-Nav
+
+# 查看日志
+journalctl -u E-Nav
 ```
 
-启动服务：
+## 注意事项
+- 请确保使用root用户执行脚本
+- 确保服务器1239端口未被占用
+- 建议安装完成后及时修改后台密码
+- 如遇问题，请查看服务日志排查
 
-```bash
-sudo systemctl start e-nav-go.service
-```
-
-检查服务状态：
-
-```bash
-sudo systemctl status e-nav-go.service
-```
-
----
-
-通过这个更新后的教程，你不仅可以安装并运行最新版本的 Go，还能轻松启动和停止你的 Go 程序，甚至将其设置为后台服务。
-
-sudo lsof -i :8080
-sudo kill -9 2032348
-
-sudo rm -f /etc/systemd/system/e-nav-go.service && sudo systemctl daemon-reload && rm -rf ~/e-nav-go && go clean -modcache && sudo rm -rf /usr/local/go && sudo apt remove --purge git && sudo apt autoremove && sed -i '/\/usr\/local\/go\/bin/d' ~/.bashrc && source ~/.bashrc && sudo apt autoremove && sudo apt clean
+## 许可证
+GPL-3.0 license
