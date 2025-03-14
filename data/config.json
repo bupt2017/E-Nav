@@ -1,0 +1,5 @@
+{
+  "port": "1239",
+  "admin_password": "$2a$10$5Y.LHEfl07WGZdyR9zOZVulBKNcqYiMnnmUTivkx9bh.iark8igg2",
+  "data_file": "bookmarks.json"
+}
