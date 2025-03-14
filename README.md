@@ -1,17 +1,5 @@
 # 🚀 E-Nav 导航站
-# 目录
-- [产品特性](#产品特性)
-- [🚀 快速部署](#-快速部署-1)
-  - [Docker部署](#方式一docker部署推荐)
-  - [Docker Compose部署](#docker-compose-部署)
-  - [本机一键脚本部署](#方式二本机一键脚本部署)
-  - [手动部署](#方法三手动部署)
-- [🛠️ 技术架构](#️-技术架构)
-- [📦 项目结构](#-项目结构)
-- [🔧 常用命令](#-常用命令-1)
-- [⚠️ 注意事项](#️-注意事项)
-- [🤝 联系我们](#-联系我们)
-- [📜 开源协议](#-开源协议)
+
 <div align="left">
 
 ![Docker](https://img.shields.io/badge/Docker-支持-blue?logo=docker)
@@ -269,22 +257,33 @@ journalctl -u E-Nav     # 查看日志
 ```
 
 ## ⚠️ 注意事项
-
 - 请使用root用户执行安装脚本
 - 确保端口1239未被占用
 - 及时修改默认管理密码
 - 定期备份重要数据
 
 ## 🤝 联系我们
-
 - 📮 Email: admin@ecouu.com
 - 💬 Telegram: [@cmin2_bot](https://t.me/cmin2_bot)
 - 🌟 [GitHub Issues](https://github.com/ecouus/E-Nav/issues)
 
-## 📜 开源协议
+## 版权所有 (Copyright)
+© 2025 ecouus 保留所有权利 (All Rights Reserved)
+## 使用限制
+1. 禁止任何形式的商业转售
+2. 禁止未经授权的商业使用
+3. 禁止去除或修改本版权声明
+4. 禁止声称拥有本项目的所有权
+## 解释权
+本项目的最终解释权归 ecouus 所有。任何对项目的理解和使用，均以 ecouus 的官方解释为准。
+## 免责声明
+本项目基于 MIT 许可证开源，但对于任何非法的使用，ecouus 保留追究法律责任的权利。
 
+## 📜 开源协议
 本项目采用 [MIT License](https://github.com/ecouus/E-Nav/blob/main/LICENSE) 协议开源。
 
 ---
 
 <p align="center">Made with ❤️ by ecouus</p>
+
+
