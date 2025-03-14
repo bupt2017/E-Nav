@@ -176,59 +176,62 @@ func saveConfig() error {
 
 // 加载书签
 func loadBookmarks() error {
-	log.Printf("尝试从 %s 加载书签数据", config.DataFile)
-	// 检查数据文件是否存在
-	if _, err := os.Stat(config.DataFile); os.IsNotExist(err) {
-		// 创建默认书签数据
-		bookmarks = []BookmarkCategory{
-			{
-				Category: "常用网站",
-				Icon:     "🔥",
-				Links: []BookmarkLink{
-					{
-						Name: "百度",
-						URL:  "https://www.baidu.com",
-						Desc: "全球最大的中文搜索引擎",
-						Icon: "B",
-					},
-					{
-						Name: "腾讯网",
-						URL:  "https://www.qq.com",
-						Desc: "新闻资讯门户网站",
-						Icon: "Q",
-					},
-				},
-			},
-			{
-				Category: "新闻资讯",
-				Icon:     "📰",
-				Links: []BookmarkLink{
-					{
-						Name: "新浪新闻",
-						URL:  "https://news.sina.com.cn/",
-						Desc: "新浪网新闻中心",
-					},
-					{
-						Name: "网易",
-						URL:  "https://www.163.com/",
-						Desc: "领先的互联网技术公司",
-					},
-				},
-			},
-		}
-		
-		// 保存默认书签
-		return saveBookmarks()
-	}
-	
-	// 读取数据文件
-	data, err := ioutil.ReadFile(config.DataFile)
-	if err != nil {
-		return err
-	}
-	
-	return json.Unmarshal(data, &bookmarks)
+    log.Printf("尝试从 %s 加载书签数据", config.DataFile)
+    // 检查数据文件是否存在
+    if _, err := os.Stat(config.DataFile); os.IsNotExist(err) {
+        // 创建默认书签数据
+        bookmarks = []BookmarkCategory{
+            {
+                Category: "常用网站",
+                Icon:     "🔥",
+                Links: []BookmarkLink{
+                    {
+                        Name: "百度",
+                        URL:  "https://www.baidu.com",
+                        Desc: "全球最大的中文搜索引擎",
+                        Icon: "https://www.google.com/s2/favicons?domain=baidu.com",
+                    },
+                    {
+                        Name: "腾讯网",
+                        URL:  "https://www.qq.com",
+                        Desc: "新闻资讯门户网站",
+                        Icon: "https://www.google.com/s2/favicons?domain=qq.com",
+                    },
+                },
+            },
+            {
+                Category: "新闻资讯",
+                Icon:     "📰",
+                Links: []BookmarkLink{
+                    {
+                        Name: "新浪新闻",
+                        URL:  "https://news.sina.com.cn/",
+                        Desc: "新浪网新闻中心",
+                        Icon: "https://www.google.com/s2/favicons?domain=sina.com.cn",
+                    },
+                    {
+                        Name: "网易",
+                        URL:  "https://www.163.com/",
+                        Desc: "领先的互联网技术公司",
+                        Icon: "https://www.google.com/s2/favicons?domain=163.com",
+                    },
+                },
+            },
+        }
+        
+        // 保存默认书签
+        return saveBookmarks()
+    }
+    
+    // 读取数据文件
+    data, err := ioutil.ReadFile(config.DataFile)
+    if err != nil {
+        return err
+    }
+    
+    return json.Unmarshal(data, &bookmarks)
 }
+
 
 // 保存书签
 func saveBookmarks() error {
