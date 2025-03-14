@@ -266,18 +266,22 @@
             background: #f8f9fa;
         }
         
+        .favicon-img {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            object-fit: contain;
+        }
+
         .bookmark-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: var(--primary-light);
-            color: var(--text-on-primary);
-            border-radius: 8px;
-            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
         }
-        
+
         .bookmark-name {
             display: flex;
             align-items: center;
@@ -835,7 +839,19 @@
                 category.links.forEach((link, index) => {
                     const row = document.createElement('tr');
                     
-                    const iconContent = link.icon || link.name.charAt(0);
+                    // 修改这里的图标渲染逻辑
+                    let iconContent = '';
+                    if (link.icon) {
+                        // 检查是否是URL
+                        if (link.icon.startsWith('http')) {
+                            iconContent = `<img src="${link.icon}" alt="icon" class="favicon-img">`;
+                        } else {
+                            iconContent = link.icon; // Emoji或文字图标
+                        }
+                    } else {
+                        iconContent = link.name.charAt(0); // 首字母作为默认图标
+                    }
+                    
                     row.innerHTML = `
                         <td>
                             <div class="bookmark-name">
@@ -859,6 +875,7 @@
                 });
             });
         }
+
         
         // 添加分类
         async function addCategory() {
