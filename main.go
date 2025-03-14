@@ -12,7 +12,7 @@ import (
     "strconv"
     "strings"
 
-    
+
     "github.com/gorilla/mux"
     "github.com/gorilla/sessions"
     "golang.org/x/crypto/bcrypt"
@@ -97,6 +97,7 @@ func main() {
 	admin.HandleFunc("/api/bookmark", addBookmarkHandler).Methods("POST")
 	admin.HandleFunc("/api/bookmark/{category}/{index}", updateBookmarkHandler).Methods("PUT") // 新增
 	admin.HandleFunc("/api/bookmark/{category}/{index}", deleteBookmarkHandler).Methods("DELETE")
+	admin.HandleFunc("/api/change-password", changePasswordHandler).Methods("POST")
 
 	// 启动服务器
 	port := config.Port
@@ -576,4 +577,51 @@ func getFavicon(siteURL string) (string, error) {
     faviconURL := "https://www.google.com/s2/favicons?domain=" + parsedURL.Hostname() + "&sz=64"
     
     return faviconURL, nil
+}
+
+// 处理密码修改的函数
+func changePasswordHandler(w http.ResponseWriter, r *http.Request) {
+    // 解析请求体
+    var passwordData struct {
+        CurrentPassword string `json:"currentPassword"`
+        NewPassword     string `json:"newPassword"`
+    }
+    
+    if err := json.NewDecoder(r.Body).Decode(&passwordData); err != nil {
+        http.Error(w, "无效的请求数据", http.StatusBadRequest)
+        return
+    }
+    
+    // 验证当前密码
+    if err := bcrypt.CompareHashAndPassword([]byte(config.AdminPwd), []byte(passwordData.CurrentPassword)); err != nil {
+        w.Header().Set("Content-Type", "application/json")
+        json.NewEncoder(w).Encode(map[string]string{
+            "status": "error",
+            "message": "当前密码错误",
+        })
+        return
+    }
+    
+    // 生成新密码的哈希值
+    newPasswordHash, err := bcrypt.GenerateFromPassword([]byte(passwordData.NewPassword), bcrypt.DefaultCost)
+    if err != nil {
+        http.Error(w, "密码哈希生成失败", http.StatusInternalServerError)
+        return
+    }
+    
+    // 更新配置中的密码哈希
+    config.AdminPwd = string(newPasswordHash)
+    
+    // 保存配置
+    if err := saveConfig(); err != nil {
+        http.Error(w, "保存配置失败", http.StatusInternalServerError)
+        return
+    }
+    
+    // 返回成功消息
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(map[string]string{
+        "status": "success",
+        "message": "密码修改成功",
+    })
 }
