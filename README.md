@@ -82,29 +82,62 @@
 docker run -d \
   --name e-nav \
   -p 1239:1239 \
-  -v /root/e-nav/data:/app/data \
+  -v $(pwd)/data:/app/data \
   --restart unless-stopped \
   ecouus/e-nav:latest
 ```
 后续更新：
 ```
-docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 -v /root/e-nav/data:/app/data --restart unless-stopped ecouus/e-nav:latest
+docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 -v $(pwd)/data:/app/data --restart unless-stopped ecouus/e-nav:latest
 ```
-<details>
-<summary>💡 端口修改说明</summary>
-
+💡 端口修改说明
 - `-p 1239:1239` 中第一个1239可更改为任意未被占用的端口
 - 例如：`-p 8080:1239` 则使用8080端口访问
-</details>
+💡 挂载路径说明
+`$(pwd)/data`表示挂载到宿主机当前工作目录的data文件夹下
 
+### 方式一：Docker部署（推荐）
+
+```bash
+docker run -d \
+  --name e-nav \
+  -p 1239:1239 \
+  -v $(pwd)/data:/app/data \
+  --restart unless-stopped \
+  ecouus/e-nav:latest
+```
+### 更新
+```bash
+docker pull ecouus/e-nav:latest && docker stop e-nav && docker rm e-nav && docker run -d --name e-nav -p 1239:1239 -v $(pwd)/data:/app/data --restart unless-stopped ecouus/e-nav:latest
+```
+💡 端口修改说明
+- `-p 1239:1239` 中第一个1239可更改为任意未被占用的端口
+- 例如：`-p 8080:1239` 则使用8080端口访问
+
+💡 挂载路径说明
+- `$(pwd)/data` 表示挂载到宿主机当前工作目录的data文件夹下
+
+**Docker Compose 部署**
+```bash
+git clone https://github.com/ecouus/E-Nav.git && cd E-Nav 
+```
+根据需要编辑 `docker-compose.yml` 文件
+#### 启动
+```bash
+docker-compose up -d
+```
+#### 更新
+```bash
+docker-compose pull && docker-compose up -d
+```
 ### 方式二：一键脚本部署
 - 安装
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/One-Click.sh -o One-Click.sh && chmod +x One-Click.sh && bash One-Click.sh install
+curl -fsSL https://raw.githubusercontent.com/ecouus/E-Nav/main/OneClick.sh -o OneClick.sh && chmod +x OneClick.sh && bash OneClick.sh install
 ```
 - 卸载
 ```
-bash One-Click.sh uninstall
+bash OneClick.sh uninstall
 ```
 ### 方法三：手动部署
 1. 安装必要软件
