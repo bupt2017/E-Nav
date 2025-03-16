@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Nav</title>
+    <title>{{if .SiteTitle}}{{.SiteTitle}}{{else}}E-Nav{{end}}</title>
     
     <!-- 引入字体图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -672,7 +672,7 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <h1>E-Nav演示站</h1>
+                <h1>{{if .SiteTitle}}{{.SiteTitle}}{{else}}E-Nav{{end}}</h1>
                 <p class="welcome-message" id="welcomeMessage">欢迎回来，祝您使用愉快！</p>
                 <p class="date-time" id="dateTime"></p>
                 <div class="search-box">
@@ -696,8 +696,8 @@
         </div>
         
         <footer>
-            <p>© 2025 <a href="https://github.com/ecouus/E-Nav" target="_blank">E-Nav</a> · 一个简洁易用的网址导航页 · 版权所有</p>
-        </footer>
+            <p>{{if .SiteFooter}}{{.SiteFooter}}{{else}}© 2025 <a href="https://github.com/ecouus/E-Nav" target="_blank">E-Nav</a> · 一个简洁易用的网址导航页 · 版权所有{{end}}</p>
+        </footer>        
     </div>
     
     <!-- 返回顶部按钮 -->
