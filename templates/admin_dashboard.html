@@ -547,9 +547,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="siteFooter">页脚内容</label>
-                        <textarea id="siteFooter" class="form-control" rows="3" placeholder="例如：© 2025 E-Nav · 一个简洁易用的网址导航页 · 版权所有"></textarea>
-                    </div>
+                        <label for="siteFooter">页脚自定义文本</label>
+                        <input type="text" id="siteFooter" class="form-control" placeholder="例如：一个简洁易用的网址导航页 · 版权所有">
+                        <small class="form-text" style="color: #777; font-size: 12px;">自定义页脚文本将显示在"© 2025 E-Nav ·"之后</small>
+                    </div>                    
+                    
                     
                     <button class="btn btn-primary" onclick="saveSiteSettings()">
                         <i class="fas fa-save"></i> 保存站点设置
@@ -1234,7 +1236,7 @@
                 
                 if(settings.status === 'success') {
                     document.getElementById('siteTitle').value = settings.data.title || '';
-                    document.getElementById('siteFooter').value = settings.data.footer || '';
+                    document.getElementById('siteFooter').value = settings.data.footer || ''; // 使用 footer 字段
                 }
             } catch (error) {
                 console.error('获取站点设置失败:', error);
@@ -1244,7 +1246,7 @@
         // 保存站点设置
         async function saveSiteSettings() {
             const title = document.getElementById('siteTitle').value.trim();
-            const footer = document.getElementById('siteFooter').value.trim();
+            const footer = document.getElementById('siteFooter').value.trim(); // 使用 siteFooter 元素
             
             // 获取提交按钮并禁用
             const submitBtn = document.querySelector('button[onclick="saveSiteSettings()"]');
@@ -1260,7 +1262,7 @@
                     },
                     body: JSON.stringify({
                         title: title,
-                        footer: footer
+                        footer: footer // 使用 footer 字段
                     })
                 });
                 
