@@ -393,6 +393,16 @@
             opacity: 1;
         }
         
+        .btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+        }
+
+        .category-actions button, 
+        .bookmark-table button {
+            margin-right: 3px;
+        }
+
         /* 响应式样式 */
         @media (max-width: 768px) {
             .sidebar {
@@ -794,25 +804,18 @@
         }
         
         // 显示提示消息
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type === 'error' ? 'toast-error' : 'toast-info'}`;
-            toast.innerHTML = message;
-            document.body.appendChild(toast);
-            
-            // 显示动画
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.backgroundColor = type === 'error' ? '#f86549' : '#38cb89';
+            toast.classList.add('show');
             
             // 3秒后隐藏
             setTimeout(() => {
                 toast.classList.remove('show');
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
             }, 3000);
         }
+
 
         
         // 获取书签数据
@@ -845,6 +848,12 @@
                         ${category.category} <small>(${category.links.length}个书签)</small>
                     </div>
                     <div class="category-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="moveCategory('${category.category}', 'up')" title="上移">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="moveCategory('${category.category}', 'down')" title="下移">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
                         <button class="btn btn-warning" onclick="editCategory('${category.category}')">
                             <i class="fas fa-edit"></i>
                         </button>
@@ -890,6 +899,12 @@
                         <td class="bookmark-url">${link.url}</td>
                         <td>${category.category}</td>
                         <td>
+                            <button class="btn btn-sm btn-secondary" onclick="moveBookmark('${category.category}', ${index}, 'up')" title="上移">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="moveBookmark('${category.category}', ${index}, 'down')" title="下移">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
                             <button class="btn btn-warning" onclick="editBookmark('${category.category}', ${index})">
                                 <i class="fas fa-edit"></i>
                             </button>
@@ -903,6 +918,7 @@
                 });
             });
         }
+
 
         
         // 添加分类
@@ -1283,6 +1299,95 @@
             }
         }
 
+        // 移动分类位置
+        async function moveCategory(categoryName, direction) {
+            // 找到当前分类的索引
+            const index = bookmarksData.findIndex(cat => cat.category === categoryName);
+            if (index === -1) return;
+            
+            // 确定目标位置
+            let targetIndex;
+            if (direction === 'up') {
+                if (index === 0) return; // 已经是第一个
+                targetIndex = index - 1;
+            } else {
+                if (index === bookmarksData.length - 1) return; // 已经是最后一个
+                targetIndex = index + 1;
+            }
+            
+            // 交换位置
+            [bookmarksData[index], bookmarksData[targetIndex]] = [bookmarksData[targetIndex], bookmarksData[index]];
+            
+            // 保存排序结果
+            try {
+                const response = await fetch('/admin/api/bookmarks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookmarksData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    renderCategories();
+                    renderBookmarks();
+                    showToast('分类排序已更新');
+                } else {
+                    showToast('排序保存失败，请重试！');
+                }
+            } catch (error) {
+                console.error('保存排序失败:', error);
+                showToast('排序保存失败，请重试！');
+            }
+        }
+
+        // 移动书签位置
+        async function moveBookmark(categoryName, bookmarkIndex, direction) {
+            // 找到当前分类
+            const categoryIndex = bookmarksData.findIndex(cat => cat.category === categoryName);
+            if (categoryIndex === -1) return;
+            
+            const links = bookmarksData[categoryIndex].links;
+            
+            // 确定目标位置
+            let targetIndex;
+            if (direction === 'up') {
+                if (bookmarkIndex === 0) return; // 已经是第一个
+                targetIndex = bookmarkIndex - 1;
+            } else {
+                if (bookmarkIndex === links.length - 1) return; // 已经是最后一个
+                targetIndex = bookmarkIndex + 1;
+            }
+            
+            // 交换位置
+            [links[bookmarkIndex], links[targetIndex]] = [links[targetIndex], links[bookmarkIndex]];
+            
+            // 保存排序结果
+            try {
+                const response = await fetch('/admin/api/bookmarks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookmarksData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    renderCategories();
+                    renderBookmarks();
+                    showToast('书签排序已更新');
+                } else {
+                    showToast('排序保存失败，请重试！');
+                }
+            } catch (error) {
+                console.error('保存排序失败:', error);
+                showToast('排序保存失败，请重试！');
+            }
+        }
 
     </script>
 </body>
