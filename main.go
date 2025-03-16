@@ -121,6 +121,7 @@ func main() {
 	admin.HandleFunc("/api/change-password", changePasswordHandler).Methods("POST")
     admin.HandleFunc("/api/site-settings", getSiteSettingsHandler).Methods("GET")
     admin.HandleFunc("/api/site-settings", updateSiteSettingsHandler).Methods("POST")
+    admin.HandleFunc("/api/bookmarks", updateAllBookmarksHandler).Methods("POST")
 
 	// 启动服务器
 	port := config.Port
@@ -747,3 +748,28 @@ func updateSiteSettingsHandler(w http.ResponseWriter, r *http.Request) {
     })
 }
 
+// 处理整个书签数据更新
+func updateAllBookmarksHandler(w http.ResponseWriter, r *http.Request) {
+    // 解析请求体
+    var updatedBookmarks []BookmarkCategory
+    decoder := json.NewDecoder(r.Body)
+    if err := decoder.Decode(&updatedBookmarks); err != nil {
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return
+    }
+    
+    // 更新书签数据
+    bookmarks = updatedBookmarks
+    
+    // 保存到文件
+    if err := saveBookmarks(); err != nil {
+        http.Error(w, "Failed to save bookmarks", http.StatusInternalServerError)
+        return
+    }
+    
+    // 返回成功响应
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(map[string]string{
+        "status": "success",
+    })
+}
