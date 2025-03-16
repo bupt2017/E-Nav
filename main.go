@@ -22,10 +22,13 @@ import (
 
 // 配置结构
 type Config struct {
-	Port     string `json:"port"`
-	AdminPwd string `json:"admin_password"` // 存储为bcrypt哈希
-	DataFile string `json:"data_file"`
+    Port     string `json:"port"`
+    AdminPwd string `json:"admin_password"` // 存储为bcrypt哈希
+    DataFile string `json:"data_file"`
+    SiteTitle string `json:"site_title"` // 站点标题
+    SiteFooter string `json:"site_footer"` // 站点页脚
 }
+
 
 // 书签链接结构
 type BookmarkLink struct {
@@ -116,6 +119,8 @@ func main() {
 	admin.HandleFunc("/api/bookmark/{category}/{index}", updateBookmarkHandler).Methods("PUT") // 新增
 	admin.HandleFunc("/api/bookmark/{category}/{index}", deleteBookmarkHandler).Methods("DELETE")
 	admin.HandleFunc("/api/change-password", changePasswordHandler).Methods("POST")
+    admin.HandleFunc("/api/site-settings", getSiteSettingsHandler).Methods("GET")
+    admin.HandleFunc("/api/site-settings", updateSiteSettingsHandler).Methods("POST")
 
 	// 启动服务器
 	port := config.Port
@@ -260,8 +265,17 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
     
-    tmpl.Execute(w, nil)
+    data := struct {
+        SiteTitle string
+        SiteFooter string
+    }{
+        SiteTitle: config.SiteTitle,
+        SiteFooter: config.SiteFooter,
+    }
+    
+    tmpl.Execute(w, data)
 }
+
 
 
 // 获取书签API
@@ -689,3 +703,47 @@ func getFaviconHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/plain")
     w.Write([]byte(faviconURL))
 }
+
+// 获取站点设置
+func getSiteSettingsHandler(w http.ResponseWriter, r *http.Request) {
+    response := map[string]interface{}{
+        "status": "success",
+        "data": map[string]string{
+            "title": config.SiteTitle,
+            "footer": config.SiteFooter,
+        },
+    }
+    
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+// 更新站点设置
+func updateSiteSettingsHandler(w http.ResponseWriter, r *http.Request) {
+    var settings struct {
+        Title  string `json:"title"`
+        Footer string `json:"footer"`
+    }
+    
+    if err := json.NewDecoder(r.Body).Decode(&settings); err != nil {
+        http.Error(w, "无效的请求数据", http.StatusBadRequest)
+        return
+    }
+    
+    // 更新配置
+    config.SiteTitle = settings.Title
+    config.SiteFooter = settings.Footer
+    
+    // 保存配置
+    if err := saveConfig(); err != nil {
+        http.Error(w, "保存配置失败", http.StatusInternalServerError)
+        return
+    }
+    
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(map[string]string{
+        "status": "success",
+        "message": "站点设置已更新",
+    })
+}
+
