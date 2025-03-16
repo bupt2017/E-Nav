@@ -538,6 +538,26 @@
                 
                 <div class="card">
                     <div class="card-title">
+                        <h3>站点设置</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="siteTitle">站点标题</label>
+                        <input type="text" id="siteTitle" class="form-control" placeholder="例如：E-Nav">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="siteFooter">页脚内容</label>
+                        <textarea id="siteFooter" class="form-control" rows="3" placeholder="例如：© 2025 E-Nav · 一个简洁易用的网址导航页 · 版权所有"></textarea>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="saveSiteSettings()">
+                        <i class="fas fa-save"></i> 保存站点设置
+                    </button>
+                </div>
+                
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-title">
                         <h3>修改管理员密码</h3>
                     </div>
                     
@@ -557,13 +577,15 @@
                     </div>
                     
                     <button class="btn btn-primary" onclick="changePassword()">
-                        <i class="fas fa-save"></i> 保存更改
+                        <i class="fas fa-save"></i> 保存密码更改
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    
+
+
+
     <!-- 添加分类模态框 -->
     <div class="modal" id="addCategoryModal">
         <div class="modal-content">
@@ -707,6 +729,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             fetchBookmarks();
             
+            // 加载站点设置
+            loadSiteSettings();
+            
             // 默认显示第一个选项卡
             showTab('categories');
             
@@ -719,6 +744,7 @@
                 });
             });
         });
+
         
         // 显示选项卡
         function showTab(tabId) {
@@ -1199,6 +1225,62 @@
                 submitBtn.innerHTML = originalBtnHtml;
             }
         }
+
+        // 页面加载时获取站点设置
+        async function loadSiteSettings() {
+            try {
+                const response = await fetch('/admin/api/site-settings');
+                const settings = await response.json();
+                
+                if(settings.status === 'success') {
+                    document.getElementById('siteTitle').value = settings.data.title || '';
+                    document.getElementById('siteFooter').value = settings.data.footer || '';
+                }
+            } catch (error) {
+                console.error('获取站点设置失败:', error);
+            }
+        }
+
+        // 保存站点设置
+        async function saveSiteSettings() {
+            const title = document.getElementById('siteTitle').value.trim();
+            const footer = document.getElementById('siteFooter').value.trim();
+            
+            // 获取提交按钮并禁用
+            const submitBtn = document.querySelector('button[onclick="saveSiteSettings()"]');
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在保存...';
+            
+            try {
+                const response = await fetch('/admin/api/site-settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        footer: footer
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    showToast('站点设置保存成功！');
+                } else {
+                    showToast('设置保存失败，请重试！');
+                }
+            } catch (error) {
+                console.error('保存站点设置失败:', error);
+                showToast('设置保存失败，请重试！');
+            } finally {
+                // 恢复按钮状态
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+            }
+        }
+
 
     </script>
 </body>
