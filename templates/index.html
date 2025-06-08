@@ -339,14 +339,14 @@
         
         .bookmark-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
         }
         
         .bookmark-item {
             background: rgba(255, 255, 255, 0.5);
             border-radius: var(--item-radius);
-            padding: 18px;
+            padding: 8px;
             transition: all var(--transition-time);
             display: flex;
             align-items: center;
@@ -354,7 +354,6 @@
             color: var(--text-primary);
             border: 1px solid rgba(240, 240, 240, 0.8);
             position: relative;
-            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
         }
         
@@ -386,28 +385,11 @@
             background: rgba(60, 60, 90, 0.8);
         }
         
-        /* 点击波纹效果 */
-        .bookmark-item .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        }
-        
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-        
         .bookmark-icon {
-            width: 40px;
-            height: 40px;
-            min-width: 40px;
-            margin-right: 12px;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            margin-right: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -432,25 +414,37 @@
             z-index: 1;
         }
         
-        .bookmark-name {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
-            transition: color var(--transition-time);
-        }
+		.bookmark-name {
+			font-weight: 600;
+			font-size: clamp(10px, 3vw, 12px); /* 动态范围 */
+			margin-bottom: 5px;
+			display: -webkit-box;
+			-webkit-line-clamp: 1; /* 限制最多1行 */
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
         
         .bookmark-item:hover .bookmark-name {
             color: var(--primary-color);
         }
         
-        .bookmark-desc {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            transition: color var(--transition-time);
-        }
+		.bookmark-desc {
+			/* 方法1：完全隐藏但保留 DOM 节点（不影响搜索） */
+			display: none;
+		
+			/* 方法2：视觉隐藏但仍占据空间（可选） */
+			/* 
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border: 0;
+			*/
+		}
         
         .bookmark-item:hover .bookmark-desc {
             color: var(--text-secondary);
@@ -659,6 +653,28 @@
                 justify-content: center;
             }
         }
+        .bookmark-item:hover::after {
+			content: attr(data-tooltip);
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			background: rgba(0, 0, 0, 0.8);
+			color: white;
+			padding: 5px 10px;
+			border-radius: 4px;
+			font-size: 12px;
+			white-space: nowrap;
+			z-index: 100;
+			margin-bottom: 5px;
+		}
+
+
+		/* 暗黑模式适配 */
+		.dark-mode .bookmark-item:hover::after {
+			background: rgba(255,255,255,0.9);
+			color: #333;
+		}
     </style>
 </head>
 <body>
@@ -672,7 +688,7 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <h1>{{if .SiteTitle}}{{.SiteTitle}}{{else}}E-Nav{{end}}</h1>
+                <!-- <h1>{{if .SiteTitle}}{{.SiteTitle}}{{else}}E-Nav{{end}}</h1> -->
                 <p class="welcome-message" id="welcomeMessage">欢迎回来，祝您使用愉快！</p>
                 <p class="date-time" id="dateTime"></p>
                 <div class="search-box">
@@ -913,17 +929,20 @@
                     // 为每个链接分配一个确定的颜色 (基于URL的哈希值，确保相同URL总是同一个颜色)
                     const colorClass = getColorForUrl(link.url, index);
                     
-                    html += `
-                        <a href="${link.url}" class="bookmark-item" target="_blank">
-                            <div class="bookmark-icon ${colorClass}" data-has-user-icon="${hasUserIcon}">
-                                ${iconContent}
-                            </div>
-                            <div class="bookmark-info">
-                                <div class="bookmark-name">${link.name}</div>
-                                <div class="bookmark-desc">${link.desc || ''}</div>
-                            </div>
-                        </a>
-                    `;
+					html += `
+						<a href="${link.url}" 
+						class="bookmark-item" 
+						target="_blank" 
+						data-tooltip="${link.desc || link.name}"> <!-- 悬浮提示 -->
+							<div class="bookmark-icon ${colorClass}" data-has-user-icon="${hasUserIcon}">
+								${iconContent}
+							</div>
+							<div class="bookmark-info">
+								<div class="bookmark-name">${link.name}</div>
+								<div class="bookmark-desc" aria-hidden="true">${link.desc || ''}</div> <!-- 隐藏但可搜索 -->
+							</div>
+						</a>
+					`;
                 });
                 
                 html += '</div>';
@@ -934,10 +953,6 @@
             // 加载网站图标
             loadFavicons();
             
-            // 添加点击波纹效果
-            document.querySelectorAll('.bookmark-item').forEach(item => {
-                item.addEventListener('click', createRippleEffect);
-            });
         }
 
 
