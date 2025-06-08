@@ -8,7 +8,7 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # 从GitHub克隆代码
-RUN git clone https://github.com/ecouus/E-Nav.git .
+RUN git clone https://github.com/bupt2017/E-Nav.git .
 
 # 安装依赖并编译
 RUN go mod init E-Nav && \
